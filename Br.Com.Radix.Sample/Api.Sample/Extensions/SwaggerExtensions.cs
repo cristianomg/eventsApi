@@ -4,8 +4,17 @@ using System;
 
 namespace Api.Sample.Extensions
 {
+    /// <summary>
+    /// Extensões de configuração do swagger
+    /// </summary>
     public static class SwaggerExtensions
     {
+
+        /// <summary>
+        /// Configurações instação do swagger no projeto
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
         public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
