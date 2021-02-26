@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data.Core.Context
 {
-    public class CoreContext : DbContext
+    public sealed class CoreContext : DbContext
     {
         public CoreContext(DbContextOptions<CoreContext> options) : base(options)
         {
