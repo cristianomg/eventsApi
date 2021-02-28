@@ -23,3 +23,4 @@ namespace Api.Sample.Extensions
             return builder;
         }
     }
+}
