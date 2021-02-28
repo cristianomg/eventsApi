@@ -16,7 +16,7 @@ namespace Api.Sample.Controllers
         [HttpPost()]
         public async Task<IActionResult> Insert([FromBody] DtoInsertEvent dtoInsertEvent)
         {
-
+            return await Task.FromResult(Ok(dtoInsertEvent));
         } 
     }
 }
