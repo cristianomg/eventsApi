@@ -25,6 +25,14 @@ namespace Api.Sample
                     .AddCustomJsonOptions()
                     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
 
+            services.AddCors(options =>
+                options.AddPolicy("CorsPolicy",
+                    builder =>
+                        builder.AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .WithOrigins("http://localhost:5500")
+                        .AllowCredentials()));
+
             services.AddSignalR();
 
             services.AddDbContext(Configuration)
@@ -54,12 +62,13 @@ namespace Api.Sample
 
             app.UseAuthorization();
 
-
+            app.UseCors("CorsPolicy");
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<EventHub>("/streamingEvents");
+
+                endpoints.MapHub<EventHub>("/events");
             });
         }
     }
