@@ -24,9 +24,9 @@ namespace Api.Sample
                     .AddCustomJsonOptions()
                     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
 
-            services.AddSwaggerConfiguration();
 
             services.AddDbContext(Configuration)
+                    .AddCustomHealthChecks()
                     .AddSwaggerConfiguration();
         }
 
