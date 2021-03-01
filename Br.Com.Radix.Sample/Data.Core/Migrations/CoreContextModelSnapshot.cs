@@ -34,8 +34,8 @@ namespace Data.Core.Migrations
                     b.Property<string>("SensorName")
                         .HasColumnType("text");
 
-                    b.Property<TimeSpan>("Timestamp")
-                        .HasColumnType("interval");
+                    b.Property<long>("Timestamp")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Value")
                         .HasColumnType("text");

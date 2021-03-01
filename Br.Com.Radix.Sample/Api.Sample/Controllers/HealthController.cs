@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Api.Sample.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     [ApiExplorerSettings(IgnoreApi = true)]
     public class HealthController : ControllerBase

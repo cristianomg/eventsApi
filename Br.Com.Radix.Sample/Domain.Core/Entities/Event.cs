@@ -8,6 +8,6 @@ namespace Domain.Core.Entities
         public string Region { get; set; }
         public string SensorName { get; set; }
         public string Value { get; set; }
-        public TimeSpan Timestamp { get; set; }
+        public long Timestamp { get; set; }
     }
 }

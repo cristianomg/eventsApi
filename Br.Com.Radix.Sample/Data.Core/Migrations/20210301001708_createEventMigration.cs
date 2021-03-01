@@ -16,7 +16,7 @@ namespace Data.Core.Migrations
                     Region = table.Column<string>(nullable: true),
                     SensorName = table.Column<string>(nullable: true),
                     Value = table.Column<string>(nullable: true),
-                    Timestamp = table.Column<TimeSpan>(nullable: false)
+                    Timestamp = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {

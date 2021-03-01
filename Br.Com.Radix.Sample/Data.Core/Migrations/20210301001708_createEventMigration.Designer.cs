@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Core.Migrations
 {
     [DbContext(typeof(CoreContext))]
-    [Migration("20210228232516_createEventMigration")]
+    [Migration("20210301001708_createEventMigration")]
     partial class createEventMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,8 +36,8 @@ namespace Data.Core.Migrations
                     b.Property<string>("SensorName")
                         .HasColumnType("text");
 
-                    b.Property<TimeSpan>("Timestamp")
-                        .HasColumnType("interval");
+                    b.Property<long>("Timestamp")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Value")
                         .HasColumnType("text");
