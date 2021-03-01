@@ -3,6 +3,8 @@ using AutoMapper;
 using Domain.Core.Entities;
 using Domain.Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Api.Sample.Controllers
@@ -24,6 +26,23 @@ namespace Api.Sample.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
             => Ok(_mapper.ProjectTo<DtoEvent>(await _eventRepository.GetAll()));
+        /// <summary>
+        /// Endpoint respónsavel por retornar todos os eventos com valor numerico.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("numericValue")]
+        public async Task<IActionResult> GetAllWithNumericValue()
+        {
+            var events = await _eventRepository.GetAll();
+            var filteredEvents = events
+                .ToList()
+                .Where(x => !string.IsNullOrEmpty(x.Value) &&
+                            x.Value.Replace(".", string.Empty).All(char.IsDigit));
+
+            return Ok(_mapper.Map<IEnumerable<DtoEvent>>(filteredEvents));
+        }
+
+
         /// <summary>
         /// Endpoint responsável por inserir os eventos.
         /// </summary>
@@ -48,5 +67,6 @@ namespace Api.Sample.Controllers
 
             return Ok(new { status = result });
         } 
+
     }
 }
