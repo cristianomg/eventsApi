@@ -9,5 +9,6 @@ namespace Domain.Core.Entities
         public string SensorName { get; set; }
         public string Value { get; set; }
         public long Timestamp { get; set; }
+        public EventStatus Status { get; set; }
     }
 }

@@ -31,6 +31,10 @@ namespace Data.Core.Mappings
             builder.Property(x => x.Timestamp)
                 .IsRequired();
 
+            builder.Property(x => x.Status)
+                .IsRequired()
+                .HasDefaultValue(EventStatus.Erro);
+
         }
     }
 }

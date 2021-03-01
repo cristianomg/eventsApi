@@ -7,8 +7,8 @@ namespace Api.Sample.Validators
     {
         public DtoInsertEventValidator()
         {
-            RuleFor(x => x.Value).NotNull().NotEmpty().WithMessage("O Valor não pode ser nulo ou vazio.");
             RuleFor(x => x.Tag).NotNull().NotEmpty().WithMessage("A tag não pode ser nula ou vazia.");
+            RuleFor(x => x.Tag).Must(x=>x.Split('.').Length == 3).WithMessage("A tag não está no formato correto.");
         }
     }
 }
