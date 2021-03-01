@@ -28,7 +28,8 @@ namespace Api.Sample
             services.AddDbContext(Configuration)
                     .AddCustomHealthChecks()
                     .AddSwaggerConfiguration()
-                    .AddAutoMapper(typeof(Startup));
+                    .AddAutoMapper(typeof(Startup))
+                    .AddRepositoryInjections();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
