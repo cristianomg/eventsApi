@@ -1,10 +1,13 @@
 ﻿using Api.Sample.Dtos;
+using Api.Sample.Hubs;
 using AutoMapper;
 using Domain.Core.Entities;
 using Domain.Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Api.Sample.Controllers
@@ -14,10 +17,14 @@ namespace Api.Sample.Controllers
     public class EventController : BaseController
     {
         private readonly IEventRepository _eventRepository;
-        public EventController(IMapper mapper, IEventRepository eventRepository) 
+        private readonly IHubContext<EventHub> _streaming;
+        public EventController(IMapper mapper,
+            IEventRepository eventRepository,
+            IHubContext<EventHub> streaming) 
             : base(mapper)
         {
             _eventRepository = eventRepository;
+            _streaming = streaming;
         }
         /// <summary>
         /// Endpoint responsável por retornar todos os eventos.
@@ -41,8 +48,6 @@ namespace Api.Sample.Controllers
 
             return Ok(_mapper.Map<IEnumerable<DtoEvent>>(filteredEvents));
         }
-
-
         /// <summary>
         /// Endpoint responsável por inserir os eventos.
         /// </summary>
@@ -65,8 +70,16 @@ namespace Api.Sample.Controllers
             var result = eventAdded.Status == EventStatus.Processed ?
                 "processed" : "erro";
 
-            return CreatedAtAction(nameof(GetAll), new { status = result });
-        } 
+            await WriteOnStream(_mapper.Map<DtoEvent>(eventAdded), "post");
 
+            return CreatedAtAction(nameof(GetAll), new { status = result });
+        }
+        private async Task WriteOnStream(DtoEvent data, string action)
+        {
+            string jsonData = string.Format("{0}\n", JsonSerializer.Serialize(new { data, action }));
+
+            //Utiliza o Hub para enviar uma mensagem para ReceiveMessage
+            await _streaming.Clients.All.SendAsync("ReceiveMessage", jsonData);
+        }
     }
 }

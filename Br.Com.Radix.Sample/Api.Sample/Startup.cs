@@ -1,4 +1,5 @@
 using Api.Sample.Extensions;
+using Api.Sample.Hubs;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,6 +25,7 @@ namespace Api.Sample
                     .AddCustomJsonOptions()
                     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
 
+            services.AddSignalR();
 
             services.AddDbContext(Configuration)
                     .AddCustomHealthChecks()
@@ -57,6 +59,7 @@ namespace Api.Sample
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<EventHub>("/streamingEvents");
             });
         }
     }
