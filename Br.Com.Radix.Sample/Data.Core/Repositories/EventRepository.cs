@@ -29,8 +29,8 @@ namespace Data.Core.Repositories
 
         public async Task<Event> Insert(Event ev)
         {
-            var eventAdded = await _context.Events.AddAsync(ev);
-            return eventAdded.Entity;
+            var addedEvent = await _context.Events.AddAsync(ev);
+            return addedEvent.Entity;
         }
 
         public async Task<Event> Update(Event ev)

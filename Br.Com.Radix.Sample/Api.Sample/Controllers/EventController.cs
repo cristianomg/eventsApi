@@ -63,14 +63,14 @@ namespace Api.Sample.Controllers
             else
                 entity.Status = EventStatus.Processed;
 
-            var eventAdded = await _eventRepository.Insert(entity);
+            var addedEvent = await _eventRepository.Insert(entity);
 
             await _eventRepository.Save();
 
-            var result = eventAdded.Status == EventStatus.Processed ?
+            var result = addedEvent.Status == EventStatus.Processed ?
                 "processed" : "erro";
 
-            await WriteOnStream(_mapper.Map<DtoEvent>(eventAdded), "post");
+            await WriteOnStream(_mapper.Map<DtoEvent>(addedEvent), "post");
 
             return CreatedAtAction(nameof(GetAll), new { status = result });
         }
