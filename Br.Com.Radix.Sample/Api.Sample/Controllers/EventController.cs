@@ -65,7 +65,7 @@ namespace Api.Sample.Controllers
             var result = eventAdded.Status == EventStatus.Processed ?
                 "processed" : "erro";
 
-            return Ok(new { status = result });
+            return CreatedAtAction(nameof(GetAll), new { status = result });
         } 
 
     }
