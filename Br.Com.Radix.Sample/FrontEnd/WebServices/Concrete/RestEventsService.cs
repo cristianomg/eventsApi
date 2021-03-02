@@ -15,10 +15,10 @@ namespace FrontEnd.WebServices.Concrete
     {
         private readonly HttpClient _httpClient;
 
-        public RestEventsService(IOptions<ConfigEventService> config)
+        public RestEventsService(ConfigEventService config)
         {
             _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri(config.Value.URL);
+            _httpClient.BaseAddress = new Uri(config.URL);
         }
 
         public async Task<IEnumerable<EventModel>> GetEvents()

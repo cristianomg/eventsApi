@@ -1,8 +1,11 @@
+using System;
 using Api.Sample.Extensions;
 using Api.Sample.Hubs;
+using Data.Core.Context;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,13 +27,13 @@ namespace Api.Sample
             services.AddControllers()
                     .AddCustomJsonOptions()
                     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
-
+            var urlCors = "http://localhost:3000";
             services.AddCors(options =>
                 options.AddPolicy("CorsPolicy",
                     builder =>
                         builder.AllowAnyMethod()
                         .AllowAnyHeader()
-                        .WithOrigins("http://localhost:3000")
+                        .WithOrigins(urlCors)
                         .AllowCredentials()));
 
             services.AddSignalR();
@@ -45,6 +48,11 @@ namespace Api.Sample
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<CoreContext>();
+                context.Database.Migrate();
+            }
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -56,7 +64,7 @@ namespace Api.Sample
                 c.RoutePrefix = string.Empty;  // Set Swagger UI at apps root
             });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 

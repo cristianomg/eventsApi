@@ -26,8 +26,9 @@ namespace FrontEnd
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var urlEventService = Environment.GetEnvironmentVariable("url") ?? "http://localhost:5000";
             services.AddControllersWithViews();
-            services.Configure<ConfigEventService>(Configuration.GetSection("ConfiguracaoCriptografiaElo"));
+            services.AddSingleton<ConfigEventService>(new ConfigEventService{URL = urlEventService});
 
             services.AddScoped<IEventsService, RestEventsService>();
             services.AddRazorPages().AddRazorRuntimeCompilation();
@@ -43,11 +44,13 @@ namespace FrontEnd
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                app.UseDeveloperExceptionPage();
+
+                // app.UseExceptionHandler("/Home/Error");
+                // // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                // app.UseHsts();
             }
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
