@@ -1,0 +1,111 @@
+﻿@model IEnumerable<FrontEnd.Models.EventModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="tabela">
+    <table class="table table-striped table-Dark table-responsive-md">
+        <thead>
+            <tr>
+                <th scope="col">
+                    Nome
+                </th>
+                <th scope="col">
+                    Pais
+                </th>
+                <th scope="col">
+                    Região
+                </th>
+                <th scope="col">
+                    Valor
+                </th>
+                <th scope="col">
+                    Timestamp
+                </th>
+                <th scope="col">
+                    Status
+                </th>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SensorName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Country)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Region)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Value)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Timestamp)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-6">@await Html.PartialAsync("_Chart")</div>
+        <div class="col-6">@await Html.PartialAsync("_List")</div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.7/signalr.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    const tableBody = $("#table-body");
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("http://localhost:5000/events")
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
+
+    function parseStatus(status) {
+        switch (status) {
+            case 0:
+                return 'Erro';
+            case 1:
+                return 'Processed';
+            default:
+                return 'Erro';
+        }
+    }
+
+    connection.on("ReceiveMessage", function (message) {
+        const serializedMessage = JSON.parse(message).data;
+        console.log(serializedMessage)
+        if (tableBody.children('tr').length == 10) {
+            tableBody.children('tr').last().remove();
+        }
+        tableBody.prepend(`<tr><td>${serializedMessage.SensorName}</td><td>${serializedMessage.Country}</td><td>${serializedMessage.Region}</td><td>${serializedMessage.Value}</td><td>${serializedMessage.Timestamp}</td><td>${parseStatus(serializedMessage.Status)}</td></tr>`)
+    });
+
+
+    async function start() {
+        try {
+            await connection.start();
+            console.log("SignalR Connected.");
+        } catch (err) {
+            console.log(err);
+            setTimeout(start, 5000);
+        }
+    };
+
+    connection.onclose(start);
+
+    // Start the connection.
+    start();
+</script>

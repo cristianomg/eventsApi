@@ -35,6 +35,12 @@ namespace Data.Core.Mappings
                 .IsRequired()
                 .HasDefaultValue(EventStatus.Erro);
 
+            builder.Property(x => x.CreateAt)
+                .IsRequired();
+
+            builder.Property(x => x.UpdatedAt)
+                .IsRequired();
+
         }
     }
 }

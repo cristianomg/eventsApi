@@ -1,0 +1,40 @@
+﻿<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<div id="chart_div"></div>
+
+<script>
+    google.charts.load('current', { packages: ['corechart', 'bar'] });
+    google.charts.setOnLoadCallback(drawBasic);
+
+    function drawBasic() {
+        const teste = [
+            ['Sensores', 'Valores']
+        ];
+        $.get('@Url.Action("Get6highestValues", "Home")', (d) =>
+        {
+            const dados = d.map(x => [x.sensorName, parseInt(x.value)])
+
+            dados.forEach(x=>teste.push(x))
+
+            var data = google.visualization.arrayToDataTable(teste);
+
+            var options = {
+                width: 500,
+                height: 300,
+                title: 'Maiores registros',
+                hAxis: {
+                    title: 'Valores',
+                    minValue: 0
+                },
+                vAxis: {
+                    title: 'Sensores'
+                }
+            };
+
+            var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+
+            chart.draw(data, options);
+        })
+
+        
+    }
+</script>

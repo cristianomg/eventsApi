@@ -32,7 +32,13 @@ namespace Api.Sample.Controllers
         /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetAll()
-            => Ok(_mapper.ProjectTo<DtoEvent>(await _eventRepository.GetAll()));
+        {
+            var events = await _eventRepository.GetAll();
+
+            var orderedEvents = events.OrderByDescending(x => x.CreateAt);
+                                             
+            return Ok(_mapper.ProjectTo<DtoEvent>(orderedEvents));
+        }
         /// <summary>
         /// Endpoint respónsavel por retornar todos os eventos com valor numerico.
         /// </summary>

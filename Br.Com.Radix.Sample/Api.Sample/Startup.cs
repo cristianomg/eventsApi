@@ -30,7 +30,7 @@ namespace Api.Sample
                     builder =>
                         builder.AllowAnyMethod()
                         .AllowAnyHeader()
-                        .WithOrigins("http://localhost:5500")
+                        .WithOrigins("http://localhost:3000")
                         .AllowCredentials()));
 
             services.AddSignalR();
