@@ -10,7 +10,7 @@ namespace Api.Sample.Extensions
     {
         public static IServiceCollection AddDbContext(this IServiceCollection services, IConfiguration configuration)
         {
-            var connection = Environment.GetEnvironmentVariable("ConnectionString") ?? configuration.GetConnectionString("CoreContext");
+            var connection=  configuration.GetConnectionString("CoreContext");
             services.AddDbContextPool<CoreContext>(options =>
                 options.UseNpgsql(connection));
             return services;

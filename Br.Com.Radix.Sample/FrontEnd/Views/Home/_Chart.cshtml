@@ -1,40 +1,43 @@
 ﻿<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <div id="chart_div"></div>
-
 <script>
-    google.charts.load('current', { packages: ['corechart', 'bar'] });
-    google.charts.setOnLoadCallback(drawBasic);
+    function generateChart() {
+        google.charts.load('current', { packages: ['corechart', 'bar'] });
+        google.charts.setOnLoadCallback(drawBasic);
 
-    function drawBasic() {
-        const teste = [
-            ['Sensores', 'Valores']
-        ];
-        $.get('@Url.Action("Get6highestValues", "Home")', (d) =>
-        {
-            const dados = d.map(x => [x.sensorName, parseInt(x.value)])
+        function drawBasic() {
+            const initalData = [
+                ['Sensores', 'Valores']
+            ];
+            $.get('@Url.Action("Get6highestValues", "Home")', (d) =>
+            {
+                if (d.length === 0)
+                    return;
+                d.map(x => [x.sensorName, parseInt(x.value)]).forEach(x => initalData.push(x))
 
-            dados.forEach(x=>teste.push(x))
+                var data = google.visualization.arrayToDataTable(initalData);
 
-            var data = google.visualization.arrayToDataTable(teste);
+                var options = {
+                    width: 500,
+                    height: 300,
+                    title: 'Maiores registros',
+                    hAxis: {
+                        title: 'Valores',
+                        minValue: 0
+                    },
+                    vAxis: {
+                        title: 'Sensores'
+                    }
+                };
 
-            var options = {
-                width: 500,
-                height: 300,
-                title: 'Maiores registros',
-                hAxis: {
-                    title: 'Valores',
-                    minValue: 0
-                },
-                vAxis: {
-                    title: 'Sensores'
-                }
-            };
+                var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
 
-            var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+                chart.draw(data, options);
+            })
 
-            chart.draw(data, options);
-        })
 
-        
+        }
     }
+    generateChart();
+
 </script>
