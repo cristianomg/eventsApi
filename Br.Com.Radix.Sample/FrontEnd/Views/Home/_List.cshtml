@@ -1,14 +1,62 @@
-﻿<div class="container pt-5 ml-5">
-    <ul>
-        <li>aadadsa</li>
-        <li>aadadsa</li>
-        <li>aadadsa</li>
-        <li>aadadsa</li>
-        <li>aadadsa</li>
-        <li>aadadsa</li>
-        <li>aadadsa</li>
-        <li>aadadsa</li>
-        <li>aadadsa</li>
-        <li>aadadsa</li>
-    </ul>
+﻿<div class="container pt-5 ml-3">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <button class="btn btn-outline-secondary dropdown-toggle" id="dropdown-title" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pesquisar por:</button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" onclick="onClickDropdown(1)">Região</a>
+                <a class="dropdown-item" onclick="onClickDropdown(2)">Sensor</a>
+            </div>
+        </div>
+        <input type="text" id="searchValue" class="form-control" aria-label="Text input with dropdown button">
+        <button type="submit" id="submitSearch" class="form-control" aria-label="Text input with dropdown">Pesquisar</button>
+    </div>
+    <div>
+        <table class="table" id="search-list">
+            <tbody>
+                <tr>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<script>
+    let searchType = {
+        Region: 1,
+        SensorName: 2
+    }
+    let selectedSearchType;
+
+    const onClickDropdown = (selectSearchType) => {
+        const dropdownTitle = document.querySelector('#dropdown-title')
+        selectedSearchType = selectSearchType
+        switch (selectSearchType) {
+            case searchType.Region:
+                dropdownTitle.innerHTML = 'Região';
+                return;
+            case searchType.SensorName:
+                dropdownTitle.innerHTML = 'Sensor';
+                return;
+            default:
+                return;
+        }
+    }
+
+    document.querySelector('#submitSearch').addEventListener('click', () => {
+        if (!selectedSearchType)
+            return;
+        const searchValue = document.querySelector('#searchValue').value;
+        $.get(`@Url.Action("GetByRegionOrName", "Home")?Value=${searchValue}&SearchType=${selectedSearchType}`,
+            function (data) {
+                if (data) {
+                    console.log(data)
+                    const searchList = $('#search-list')
+                    if (searchList.children('tr').length == 5) {
+                        searchList.children('tr').last().remove();
+                    }
+                    searchList.prepend(`<tr><td>&#8226 ${data.tag}.${data.quantity}</td></tr>`)
+                }
+            })
+    })
+
+</script>

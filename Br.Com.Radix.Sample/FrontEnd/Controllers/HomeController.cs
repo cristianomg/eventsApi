@@ -21,13 +21,20 @@ namespace FrontEnd.Controllers
             _logger = logger;
             _eventService = eventsService;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Index()
         {
             var events = await _eventService.GetEvents();
             return View(events);
         }
-
+        /// <summary>
+        //
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<JsonResult> Get6highestValues()
         {
@@ -37,10 +44,53 @@ namespace FrontEnd.Controllers
 
             return Json(sixHighestValues);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public PartialViewResult Chart()
+        public async Task<PartialViewResult> Chart()
         {
-            return PartialView();
+            return await Task.FromResult(PartialView());
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<JsonResult> GetByRegionOrName([FromQuery] SearchEventModel searchModel)
+        {
+            if (string.IsNullOrEmpty(searchModel.Value))
+                return Json(null);
+
+            var events = await _eventService.GetEvents();
+            SearchEventResultModel search = default;
+            switch (searchModel.SearchType)
+            {
+                case SearchType.Region:
+                     search = events.Where(x => x.Region.ToLower() == searchModel.Value.ToLower())
+                               .GroupBy(x => new { x.Country, x.Region })
+                               .Select(x => new SearchEventResultModel 
+                               {
+                                    Tag = $"{x.Key.Country}.{x.Key.Region}",
+                                    Quantity = x.Count()
+                               })
+                               .FirstOrDefault();
+                    break;
+                case SearchType.SensorName:
+                    search = events.Where(x => x.SensorName.ToLower() == searchModel.Value.ToLower())
+                               .GroupBy(x => new { x.Country, x.Region, x.SensorName })
+                               .Select(x => new SearchEventResultModel
+                               {
+                                    Tag = $"{x.Key.Country}.{x.Key.Region}.{x.Key.SensorName}",
+                                    Quantity = x.Count()
+                               })
+                              .FirstOrDefault();
+                    break;
+            }
+
+            return Json(search);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

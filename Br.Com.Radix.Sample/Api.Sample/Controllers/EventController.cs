@@ -87,5 +87,7 @@ namespace Api.Sample.Controllers
             //Utiliza o Hub para enviar uma mensagem para ReceiveMessage
             await _streaming.Clients.All.SendAsync("ReceiveMessage", jsonData);
         }
+
+
     }
 }
