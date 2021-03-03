@@ -13,7 +13,7 @@ services:
       POSTGRES_PASSWORD: "docker"
       POSTGRES_DB: "radix-dev"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U radix"]
       interval: 10s
       timeout: 5s
       retries: 5
