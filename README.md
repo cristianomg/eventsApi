@@ -45,7 +45,7 @@ Na parte visual foi desenvolvida uma aplicação em asp net Mvc core 3.1 , que p
 
 ## Clone
 ```
-https://gitlab.com/cristianomg/junior-analyst.git
+https://github.com/cristianomg/eventsApi.git
 ```
 ## Inicialização
 Para inicializar entre na pasta do projeto e execute os comandos abaixo:
